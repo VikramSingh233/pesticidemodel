@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Leaf Analyzer</title>
+</head>
+<body>
+  <h2>Upload Leaf Image</h2>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" id="imageInput" name="image" accept="image/*" />
+    <button type="submit">Analyze</button>
+  </form>
+
+  <h3>Response:</h3>
+  <pre id="result"></pre>
+
+  <script>
+    const form = document.getElementById("uploadForm");
+    const resultBox = document.getElementById("result");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById("imageInput");
+      if (!fileInput.files.length) {
+        alert("Please select an image");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("image", fileInput.files[0]);
+
+      try {
+        const res = await fetch("/api/check", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+        resultBox.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        resultBox.textContent = "Error: " + err;
+      }
+    });
+  </script>
+</body>
+</html>
