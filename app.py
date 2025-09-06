@@ -11,9 +11,9 @@ from flask_cors import CORS
 app = Flask(__name__, template_folder="templates")
 CORS(app)  # Allow requests from Next.js frontend
 
-# Load models (kept in backend/ folder)
-plant_model = load_model("backend/plant_type_model1.h5")
-leaf_model = load_model("backend/plant_diseases_model.h5")
+
+plant_model = tf.keras.models.load_model("backend/plant_type_model1.h5", compile=False)
+leaf_model = tf.keras.models.load_model("backend/plant_diseases_model.h5", compile=False)
 
 # Upload folder for temporary file storage
 app.config["UPLOAD_FOLDER"] = "uploads"
@@ -51,7 +51,8 @@ def check_leaf():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
 
 
 
